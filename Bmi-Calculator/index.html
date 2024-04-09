@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="row">     
+      <div class="col-4 shadow-lg">
+        <h2>BMI Calculator</h2>
+      <label for="Height">Height:</label>
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+          </div>
+          <input id="height" type="number" class="form-control" placeholder="Enter Your Height(cm)" value="">
+      </div>
+  
+      
+      <label for="Weight">Weight(kg):</label>
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+          </div>
+          <input id="weight" type="number" class="form-control" placeholder="Enter Your Weight(kg)">
+      </div>
+  
+
+      <button id="bmi_btn" class="">Calculate BMI</button>
+      <input id="bmi" type="number" class="form-control">
+  </div>
+</div>
+</div>
+  <script>
+      var bmi_btn = document.getElementById('bmi_btn');
+      
+      bmi_btn.addEventListener('click', () => {
+          var height = parseFloat(document.getElementById('height').value);
+          console.log(height.value);
+          var weight = parseFloat(document.getElementById('weight').value);
+          var bmi = document.getElementById('bmi');
+          
+          if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+              bmi.value = "Invalid Input";
+          } else {
+              var bmiResult = weight / ((height / 100) * (height / 100));
+              bmi.value = bmiResult.toFixed(2); 
+              
+          }
+
+          if(bmiResult<16){
+           bmi_btn.innerHTML='SEVERE THINNESS';
+            
+          }
+          else if(bmiResult>=16 | bmiResult<=17){
+            bmi_btn.innerHTML='MODERATE THINNESS';
+
+          }
+          
+          else if(bmiResult>17 | bmiResult<=18.5){
+            bmi_btn.innerHTML='Mild THINNESS';
+
+          }
+          else if(bmiResult>18.5 | bmiResult<=25){
+            bmi_btn.innerHTML='NORMAL';
+
+          }
+          else if(bmiResult>25 | bmiResult<=30){
+            bmi_btn.innerHTML='OVERWEIGHT';
+
+          }
+          else if(bmiResult>30 | bmiResult<=35){
+            bmi_btn.innerHTML='OBESE CLASS 1';
+
+          }
+          else if(bmiResult>35 | bmiResult<=40){
+            bmi_btn.innerHTML='OBESE CLASS 2';
+
+          }
+          else if(bmiResult>40){
+            bmi_btn.innerHTML='OBESE CLASS 3';
+            
+          }
+          else{
+            bmi.innerHTML='Invalid';
+
+          }
+      });
+
+
+  </script>
+  
+
+
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
