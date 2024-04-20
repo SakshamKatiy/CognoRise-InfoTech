@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        #container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        #category-select {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        #quiz {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #question {
+            margin-bottom: 20px;
+        }
+        
+        #options {
+            display: flex;
+            flex-direction: column;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Quiz App</h1>
+        <div id="category-select">
+            <label for="category">Select Category:</label>
+            <select id="category">
+                <!-- Options will be populated dynamically with JavaScript -->
+            </select>
+            <button id="startBtn">Start Quiz</button>
+        </div>
+        <div id="quiz" style="display: none;">
+            <div id="question"></div>
+            <div id="options"></div>
+            <button id="nextBtn">Next</button>
+        </div>
+        <div id="result" style="display: none;">
+            <h2>Quiz Result</h2>
+            <p id="score"></p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category');
+            const startBtn = document.getElementById('startBtn');
+            const quizContainer = document.getElementById('quiz');
+            const questionDiv = document.getElementById('question');
+            const optionsDiv = document.getElementById('options');
+            const nextBtn = document.getElementById('nextBtn');
+            const resultDiv = document.getElementById('result');
+            const scoreDisplay = document.getElementById('score');
+        
+            let currentQuiz = [];
+            let currentQuestionIndex = 0;
+            let score = 0;
+        
+            // Fetch quizzes from backend
+            fetch('/api/quizzes')
+                .then(response => response.json())
+                .then(quizzes => {
+                    quizzes.forEach(quiz => {
+                        const option = document.createElement('option');
+                        option.textContent = quiz.category;
+                        option.value = quiz._id;
+                        categorySelect.appendChild(option);
+                    });
+                });
+        
+            startBtn.addEventListener('click', startQuiz);
+            nextBtn.addEventListener('click', nextQuestion);
+        
+            function startQuiz() {
+                const selectedCategory = categorySelect.value;
+                fetch(`/api/quizzes/${selectedCategory}`)
+                    .then(response => response.json())
+                    .then(quiz => {
+                        currentQuiz = quiz.questions;
+                        currentQuestionIndex = 0;
+                        score = 0;
+                        showQuestion();
+                        quizContainer.style.display = 'block';
+                        resultDiv.style.display = 'none';
+                    });
+            }
+        
+            function showQuestion() {
+                const currentQuestion = currentQuiz[currentQuestionIndex];
+                questionDiv.textContent = currentQuestion.question;
+        
+                optionsDiv.innerHTML = '';
+                currentQuestion.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.value = index;
+                    button.addEventListener('click', selectOption);
+                    optionsDiv.appendChild(button);
+                });
+            }
+        
+            function selectOption(event) {
+                const selectedOptionIndex = parseInt(event.target.value);
+                const currentQuestion = currentQuiz[currentQuestionIndex];
+                if (selectedOptionIndex === currentQuestion.correctAnswerIndex) {
+                    score++;
+                }
+                nextBtn.style.display = 'block';
+                event.target.style.backgroundColor = '#5cb85c'; 
+                optionsDiv.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                });
+            }
+        
+            function nextQuestion() {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuiz.length) {
+                    showQuestion();
+                    nextBtn.style.display = 'none';
+                    optionsDiv.querySelectorAll('button').forEach(btn => {
+                        btn.style.backgroundColor = '#007bff'; 
+                        btn.disabled = false; 
+                    });
+                } else {
+                    endQuiz();
+                }
+            }
+        
+            function endQuiz() {
+                quizContainer.style.display = 'none';
+                resultDiv.style.display = 'block';
+                scoreDisplay.textContent = `Your score: ${score} / ${currentQuiz.length}`;
+            }
+        });
+        
+    </script>
+</body>
+</html>
