@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f3f3f3; 
+  }
+  h1 {
+    color: #333; 
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  #countdown {
+    font-size: 36px;
+    margin-bottom: 20px;
+    background-color: #fff; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  }
+  input[type="datetime-local"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #45a049; 
+  }
+  .alert {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    display: none;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Countdown Timer</h1>
+  <div id="countdown"></div>
+  <label for="datetime">Select countdown date and time:</label>
+  <input type="datetime-local" id="datetime">
+  <button onclick="setCountdown()">Start Countdown</button>
+  <div class="alert">Countdown expired</div>
+</div>
+
+<script>
+  let countdownInterval;
+
+  function setCountdown() {
+    clearInterval(countdownInterval);
+
+    const selectedDateTime = document.getElementById('datetime').value;
+    const targetDate = new Date(selectedDateTime).getTime();
+
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+      document.querySelector('.alert').style.display = 'block';
+      return;
+    }
+
+    countdownInterval = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      if (distance <= 0) {
+        clearInterval(countdownInterval);
+        document.querySelector('.alert').style.display = 'block';
+      }
+    }, 1000);
+  }
+</script>
+</body>
+</html>
+
