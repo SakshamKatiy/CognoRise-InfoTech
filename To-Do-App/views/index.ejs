@@ -1,0 +1,34 @@
+<%- include("./partials/header") %>
+
+
+
+
+<div class="container">
+    <form action="/add/todo" method="post" class=" ">
+
+        <div class="form-group">
+        <input type="text" name="todo" class="form-control mx-1"  placeholder="Enter your task">
+    </div>
+    <div>
+   <input type="submit" class="btn btn-sm btn-primary mx-2" value="Add">
+    </form></div>
+    <ul>
+        <% todo.forEach(todos=>{ %>
+
+       
+        <li class="list-group-item"><%= todos.todo %><a href="/delete/todo/<%= todos._id %>" class="btn btn-danger">Delete</a></li>
+        
+    <% })%>
+
+    </ul>
+</div>
+
+
+
+
+<%- include("./partials/footer") %>
+
+
+
+      
+   
